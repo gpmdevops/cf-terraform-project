@@ -53,7 +53,7 @@ terraform apply
 ```
 Terraform will show you a plan of the resources it will create. Type yes to confirm and proceed.
 
-5. Test the Deployment
+5. Test the Deployment:
 Once the deployment is complete, Terraform will output the following:
 
 Cloud Function URL: The URL to access the Cloud Function directly.
@@ -81,7 +81,7 @@ curl -m 70 -X POST https://us-central1-hello-world-454204.cloudfunctions.net/hel
 
 ![Screenshot2](https://github.com/user-attachments/assets/4fb7f8f9-6068-4ca8-9dc3-02b4462cf77a)
 
-6. Run Automated Tests
+6. Run Automated Tests:
 This project includes automated tests using Terratest. To run the tests:
 
 Navigate to the tests directory:
@@ -92,18 +92,18 @@ go test -v
 ```
 The tests will:
 
-Deploy the infrastructure.
-Validate the Cloud Function and Load Balancer.
-Destroy the infrastructure after the test.
+- Deploy the infrastructure.
+- Validate the Cloud Function and Load Balancer.
+- Destroy the infrastructure after the test.
 
-7. Clean Up
+7. Clean Up:-
 Destroy the infrastructure to avoid unnecessary charges, after completing the project:
 ```
 terraform destroy
 #Type yes to confirm and proceed.
 ```
 
-Project Structure
+Project Structure:-
 Here’s an overview of the files and directories in this project:
 
 ```
