@@ -106,21 +106,6 @@ terraform destroy
 Project Structure:-
 Here’s an overview of the files and directories in this project:
 
-```
-terraform-gcf/
-├── main.tf                  # Main Terraform configuration
-├── variables.tf             # Input variables for Terraform
-├── outputs.tf               # Output values from Terraform
-├── modules/                 # Terraform modules
-│   ├── cloud_function/      # Module for the Cloud Function
-│   ├── load_balancer/       # Module for the Load Balancer
-│   └── network_endpoint_group/ # Module for the Network Endpoint Group
-├── tests/                   # Terratest scripts
-│   ├── cloud_function_test.go # Test for the Cloud Function
-│   ├── load_balancer_test.go  # Test for the Load Balancer
-│   └── go.mod               # Go module file
-└── README.md                # current file
-```
 
 ![Screenshot3](https://github.com/user-attachments/assets/b9da7b2a-3322-487d-8984-061cf92925cd)
 
