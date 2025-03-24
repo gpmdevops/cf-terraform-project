@@ -11,6 +11,8 @@
 - Security: Implements secure configurations for the Cloud Function and Load Balancer.
 
 - Automated Testing: Uses Terratest to validate the infrastructure.
+![graph](https://github.com/user-attachments/assets/6f99c9cd-596f-4f75-a1ec-c7078e94c179)
+
 
 # Prerequisites
 This projec requires following prerquisites:-
