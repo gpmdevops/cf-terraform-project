@@ -1,132 +1,464 @@
-# Terraform Project: Hello World with GCP Cloud Function and Load Balancer
-- This project demonstrates how to deploy a simple "Hello World" application using Google Cloud Platform (GCP). 
-- The application is built using a Cloud Function, exposed through a Load Balancer, and secured with appropriate configurations. 
-- The entire infrastructure is defined using Terraform, an infrastructure-as-code tool.
-
-# More about This Project-
-- Cloud Function: A serverless function that returns "Hello World!" when accessed.
-
-- Load Balancer: Distributes incoming traffic to the Cloud Function.
-
-- Security: Implements secure configurations for the Cloud Function and Load Balancer.
-
-- Automated Testing: Uses Terratest to validate the infrastructure.
-![graph](https://github.com/user-attachments/assets/6f99c9cd-596f-4f75-a1ec-c7078e94c179)
-
-
-# Prerequisites
-This projec requires following prerquisites:-
-
-. Google Cloud Account: A GCP account with a project created.
-
-. Terraform Installed: Install Terraform from here.
-
-. Google Cloud SDK: Install the Google Cloud SDK from here.
-
-. Go Installed: Install Go from here (required for Terratest).
-
-# How to Use This Project
-1. Clone the Repository
-Clone this repository to your local machine:
-```
-git clone https://github.com/your-repo/terraform-gcf.git
-cd terraform-gcf
-```
-2. Set Up Google Cloud
-- Authenticate with GCP:
-```
-gcloud auth application-default login
-```
-
-- Set Your GCP Project:
-```
-gcloud config set project YOUR_PROJECT_ID
-```
-
-3. Initialize Terraform
-```
-terraform init
-```
-4. Deploy the Infrastructure
-```
-terraform apply
-```
-Terraform will show you a plan of the resources it will create. Type yes to confirm and proceed.
-
-5. Test the Deployment:
-Once the deployment is complete, Terraform will output the following:
-
-Cloud Function URL: The URL to access the Cloud Function directly.
-
-Load Balancer IP: The public IP address of the Load Balancer.
-
-Access the Cloud Function
-
-Open the Cloud Function console and test the connection:
-```
-curl -m 70 -X POST https://us-central1-hello-world-454204.cloudfunctions.net/hello-world-function \
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terraform Project: Hello World with GCP Cloud Function and Load Balancer</title>
+    <style>
+        :root {
+            --primary: #4285F4;
+            --secondary: #34A853;
+            --accent: #EA4335;
+            --light: #f8f9fa;
+            --dark: #202124;
+            --gray: #5f6368;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: var(--light);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        h2 {
+            color: var(--primary);
+            margin: 1.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        h3 {
+            color: var(--secondary);
+            margin: 1.2rem 0 0.8rem;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+        }
+        
+        ul, ol {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+        
+        li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .highlight {
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+        
+        pre {
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre-wrap;
+        }
+        
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f5f5f5;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .image-container {
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            border-top: 4px solid var(--primary);
+        }
+        
+        .feature-card h3 {
+            color: var(--primary);
+        }
+        
+        .accordion {
+            margin-bottom: 1rem;
+        }
+        
+        .accordion-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .accordion-header:hover {
+            background-color: #3367d6;
+        }
+        
+        .accordion-content {
+            padding: 1rem;
+            background-color: white;
+            border-radius: 0 0 4px 4px;
+            display: none;
+        }
+        
+        .accordion.active .accordion-content {
+            display: block;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #3367d6;
+        }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Terraform Project: Hello World with GCP Cloud Function and Load Balancer</h1>
+            <p>Deploying serverless applications with infrastructure-as-code</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="card">
+            <p>This project demonstrates how to deploy a simple "Hello World" application using Google Cloud Platform (GCP). The application is built using a Cloud Function, exposed through a Load Balancer, and secured with appropriate configurations. The entire infrastructure is defined using Terraform, an infrastructure-as-code tool.</p>
+        </div>
+        
+        <div class="image-container">
+            <img src="https://github.com/user-attachments/assets/6f99c9cd-596f-4f75-a1ec-c7078e94c179" alt="Architecture diagram">
+        </div>
+        
+        <h2>More about This Project</h2>
+        
+        <div class="grid">
+            <div class="feature-card">
+                <h3>Cloud Function</h3>
+                <p>A serverless function that returns "Hello World!" when accessed.</p>
+            </div>
+            
+            <div class="feature-card">
+                <h3>Load Balancer</h3>
+                <p>Distributes incoming traffic to the Cloud Function.</p>
+            </div>
+            
+            <div class="feature-card">
+                <h3>Security</h3>
+                <p>Implements secure configurations for the Cloud Function and Load Balancer.</p>
+            </div>
+            
+            <div class="feature-card">
+                <h3>Automated Testing</h3>
+                <p>Uses Terratest to validate the infrastructure.</p>
+            </div>
+        </div>
+        
+        <h2>Prerequisites</h2>
+        
+        <div class="card">
+            <p>This project requires following prerquisites:</p>
+            <ul>
+                <li><strong>Google Cloud Account:</strong> A GCP account with a project created.</li>
+                <li><strong>Terraform Installed:</strong> Install Terraform from <a href="https://www.terraform.io/downloads.html" class="btn">here</a>.</li>
+                <li><strong>Google Cloud SDK:</strong> Install the Google Cloud SDK from <a href="https://cloud.google.com/sdk/docs/install" class="btn">here</a>.</li>
+                <li><strong>Go Installed:</strong> Install Go from <a href="https://golang.org/dl/" class="btn">here</a> (required for Terratest).</li>
+            </ul>
+        </div>
+        
+        <h2>How to Use This Project</h2>
+        
+        <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span>1. Clone the Repository</span>
+                <span class="accordion-icon">+</span>
+            </div>
+            <div class="accordion-content">
+                <p>Clone this repository to your local machine:</p>
+                <div class="highlight">
+                    <pre><code>git clone https://github.com/your-repo/terraform-gcf.git
+cd terraform-gcf</code></pre>
+                </div>
+            </div>
+        </div>
+        
+        <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span>2. Set Up Google Cloud</span>
+                <span class="accordion-icon">+</span>
+            </div>
+            <div class="accordion-content">
+                <p>Authenticate with GCP:</p>
+                <div class="highlight">
+                    <pre><code>gcloud auth application-default login</code></pre>
+                </div>
+                <p>Set Your GCP Project:</p>
+                <div class="highlight">
+                    <pre><code>gcloud config set project YOUR_PROJECT_ID</code></pre>
+                </div>
+            </div>
+        </div>
+        
+        <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span>3. Initialize Terraform</span>
+                <span class="accordion-icon">+</span>
+            </div>
+            <div class="accordion-content">
+                <div class="highlight">
+                    <pre><code>terraform init</code></pre>
+                </div>
+            </div>
+        </div>
+        
+        <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span>4. Deploy the Infrastructure</span>
+                <span class="accordion-icon">+</span>
+            </div>
+            <div class="accordion-content">
+                <div class="highlight">
+                    <pre><code>terraform apply</code></pre>
+                </div>
+                <p>Terraform will show you a plan of the resources it will create. Type <code>yes</code> to confirm and proceed.</p>
+            </div>
+        </div>
+        
+        <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span>5. Test the Deployment</span>
+                <span class="accordion-icon">+</span>
+            </div>
+            <div class="accordion-content">
+                <p>Once the deployment is complete, Terraform will output the following:</p>
+                <ul>
+                    <li><strong>Cloud Function URL:</strong> The URL to access the Cloud Function directly.</li>
+                    <li><strong>Load Balancer IP:</strong> The public IP address of the Load Balancer.</li>
+                </ul>
+                
+                <h3>Access the Cloud Function</h3>
+                <p>Open the Cloud Function console and test the connection:</p>
+                <div class="highlight">
+                    <pre><code>curl -m 70 -X POST https://us-central1-hello-world-454204.cloudfunctions.net/hello-world-function \
 -H "Authorization: bearer $(gcloud auth print-identity-token)" \
 -H "Content-Type: application/json" \
 -d '{
     "message": "Hello World"
-}'
- response: " Hi There, Its a deployment on Cloudfunction_1stgen "
-
-#Access the Load Balancer
-#the same test goes for the loadbalancer also.
-#if we need the function to hit only by lb ip then we need to change the permission to lb only.
-
-```
-![Screensh0t1](https://github.com/user-attachments/assets/e90aa82b-50e2-4404-b38e-d642f6f185cb)
-
-![Screenshot2](https://github.com/user-attachments/assets/4fb7f8f9-6068-4ca8-9dc3-02b4462cf77a)
-
-6. Run Automated Tests:
-This project includes automated tests using Terratest. To run the tests:
-
-Navigate to the tests directory:
-
-```
-cd tests
-go test -v
-```
-The tests will:
-
-- Deploy the infrastructure.
-- Validate the Cloud Function and Load Balancer.
-- Destroy the infrastructure after the test.
-
-7. Clean Up:-
-Destroy the infrastructure to avoid unnecessary charges, after completing the project:
-```
-terraform destroy
-#Type yes to confirm and proceed.
-```
-
-Project Structure:-
-Here’s an overview of the files and directories in this project:
-
-
-![Screenshot3](https://github.com/user-attachments/assets/b9da7b2a-3322-487d-8984-061cf92925cd)
-
-What’s Inside the Terraform Code?
-1. Cloud Function-
-   . A simple Python function that returns "Hello World!".
-   . Deployed using a serverless Cloud Function.
-   . Configured to allow traffic from the Load Balancer.
-
-
-2. Load Balancer-
-   . A global HTTP(S) Load Balancer that distributes traffic to the Cloud Function.
-   . Uses a Serverless Network Endpoint Group (NEG) to connect to the Cloud Function.
-   . Secured with an SSL certificate
-
-3. Security
-   . Restricts access to the Cloud Function using IAM roles.
-   . Ensures only the Load Balancer can invoke the Cloud Function.
-
-# Why?
-1. Why is the Cloud Function URL not public?
-   
-- By default, Cloud Functions are configured to allow only internal traffic or traffic from the Load Balancer.
-  To make the URL public, set the ingress_settings to ALLOW_ALL in the Cloud Function configuration.
+}'</code></pre>
+                </div>
+                <p>Response: <code>"Hi There, Its a deployment on Cloudfunction_1stgen"</code></p>
+                
+                <h3>Access the Load Balancer</h3>
+                <p>The same test goes for the loadbalancer also. If we need the function to hit only by lb ip then we need to change the permission to lb only.</p>
+                
+                <div class="image-container">
+                    <img src="https://github.com/user-attachments/assets/e90aa82b-50e2-4404-b38e-d642f6f185cb" alt="Screenshot 1">
+                </div>
+                <div class="image-container">
+                    <img src="https://github.com/user-attachments/assets/4fb7f8f9-6068-4ca8-9dc3-02b4462cf77a" alt="Screenshot 2">
+                </div>
+            </div>
+        </div>
+        
+        <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span>6. Run Automated Tests</span>
+                <span class="accordion-icon">+</span>
+            </div>
+            <div class="accordion-content">
+                <p>This project includes automated tests using Terratest. To run the tests:</p>
+                <p>Navigate to the tests directory:</p>
+                <div class="highlight">
+                    <pre><code>cd tests
+go test -v</code></pre>
+                </div>
+                <p>The tests will:</p>
+                <ul>
+                    <li>Deploy the infrastructure.</li>
+                    <li>Validate the Cloud Function and Load Balancer.</li>
+                    <li>Destroy the infrastructure after the test.</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span>7. Clean Up</span>
+                <span class="accordion-icon">+</span>
+            </div>
+            <div class="accordion-content">
+                <p>Destroy the infrastructure to avoid unnecessary charges, after completing the project:</p>
+                <div class="highlight">
+                    <pre><code>terraform destroy</code></pre>
+                </div>
+                <p>Type <code>yes</code> to confirm and proceed.</p>
+            </div>
+        </div>
+        
+        <h2>Project Structure</h2>
+        
+        <div class="card">
+            <p>Here's an overview of the files and directories in this project:</p>
+            <div class="image-container">
+                <img src="https://github.com/user-attachments/assets/b9da7b2a-3322-487d-8984-061cf92925cd" alt="Screenshot 3">
+            </div>
+        </div>
+        
+        <h2>What's Inside the Terraform Code?</h2>
+        
+        <div class="grid">
+            <div class="feature-card">
+                <h3>Cloud Function</h3>
+                <ul>
+                    <li>A simple Python function that returns "Hello World!".</li>
+                    <li>Deployed using a serverless Cloud Function.</li>
+                    <li>Configured to allow traffic from the Load Balancer.</li>
+                </ul>
+            </div>
+            
+            <div class="feature-card">
+                <h3>Load Balancer</h3>
+                <ul>
+                    <li>A global HTTP(S) Load Balancer that distributes traffic to the Cloud Function.</li>
+                    <li>Uses a Serverless Network Endpoint Group (NEG) to connect to the Cloud Function.</li>
+                    <li>Secured with an SSL certificate.</li>
+                </ul>
+            </div>
+            
+            <div class="feature-card">
+                <h3>Security</h3>
+                <ul>
+                    <li>Restricts access to the Cloud Function using IAM roles.</li>
+                    <li>Ensures only the Load Balancer can invoke the Cloud Function.</li>
+                </ul>
+            </div>
+        </div>
+        
+        <h2>Why?</h2>
+        
+        <div class="card">
+            <h3>Why is the Cloud Function URL not public?</h3>
+            <p>By default, Cloud Functions are configured to allow only internal traffic or traffic from the Load Balancer. To make the URL public, set the <code>ingress_settings</code> to <code>ALLOW_ALL</code> in the Cloud Function configuration.</p>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>Terraform Project: Hello World with GCP Cloud Function and Load Balancer</p>
+            <p>© 2023 Your Name. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Toggle accordion sections
+        function toggleAccordion(header) {
+            const accordion = header.parentElement;
+            const content = header.nextElementSibling;
+            const icon = header.querySelector('.accordion-icon');
+            
+            if (accordion.classList.contains('active')) {
+                accordion.classList.remove('active');
+                content.style.display = 'none';
+                icon.textContent = '+';
+            } else {
+                accordion.classList.add('active');
+                content.style.display = 'block';
+                icon.textContent = '-';
+            }
+        }
+        
+        // Open first accordion by default
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstAccordion = document.querySelector('.accordion');
+            if (firstAccordion) {
+                firstAccordion.classList.add('active');
+                firstAccordion.querySelector('.accordion-content').style.display = 'block';
+                firstAccordion.querySelector('.accordion-icon').textContent = '-';
+            }
+        });
+    </script>
+</body>
+</html>
